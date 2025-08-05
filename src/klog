@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Keylogger CLI Wrapper Script
+# Convenient shell wrapper for the keylogger CLI tool
+#
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CLI_SCRIPT="$SCRIPT_DIR/keylogger_cli.py"
+
+# Check if the CLI script exists
+if [ ! -f "$CLI_SCRIPT" ]; then
+    echo "❌ Error: keylogger_cli.py not found in $SCRIPT_DIR"
+    exit 1
+fi
+
+# Function to show usage examples
+show_examples() {
+    echo "📖 Keylogger CLI - Usage Examples"
+    echo "=================================="
+    echo
+    echo "📋 List available log files:"
+    echo "  $0 list"
+    echo
+    echo "👁️  View logs (last 7 days):"
+    echo "  $0 view"
+    echo
+    echo "👁️  View logs for specific date range:"
+    echo "  $0 view --start-date 2025-08-01 --end-date 2025-08-05"
+    echo
+    echo "🪟 Filter by window title:"
+    echo "  $0 view --window \"Visual Studio Code\""
+    echo "  $0 view --window \"Terminal.*bash\""
+    echo
+    echo "📊 Show statistics:"
+    echo "  $0 stats"
+    echo "  $0 stats --start-date 2025-08-01"
+    echo
+    echo "🔍 Search for patterns:"
+    echo "  $0 search \"password\""
+    echo "  $0 search \"Key: 'a'\" --start-date 2025-08-01"
+    echo
+    echo "💾 Export to different formats:"
+    echo "  $0 view --format json --output logs.json"
+    echo "  $0 view --format csv --output logs.csv"
+    echo
+    echo "🔑 Use environment variable for password:"
+    echo "  export KEYLOGGER_CLI_PASSWORD=\"your_password\""
+    echo "  $0 view  # Will use environment password"
+    echo
+    echo "For detailed help on any command:"
+    echo "  $0 <command> --help"
+}
+
+# Handle special cases
+case "$1" in
+    "examples"|"help"|"-h"|"--help")
+        if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+            python3 "$CLI_SCRIPT" --help
+            echo
+        fi
+        show_examples
+        exit 0
+        ;;
+    "")
+        echo "⚠️  No command specified."
+        echo
+        python3 "$CLI_SCRIPT" --help
+        echo
+        show_examples
+        exit 1
+        ;;
+esac
+
+# Check if password is set in environment
+if [ -n "$KEYLOGGER_CLI_PASSWORD" ]; then
+    # Check if --password is already specified
+    if [[ ! " $* " =~ " --password " ]]; then
+        # Add password from environment
+        set -- "$@" "--password" "$KEYLOGGER_CLI_PASSWORD"
+    fi
+fi
+
+# Execute the CLI with all arguments
+exec python3 "$CLI_SCRIPT" "$@"
